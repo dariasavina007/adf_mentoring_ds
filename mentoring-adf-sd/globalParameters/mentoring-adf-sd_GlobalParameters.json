@@ -1,0 +1,6 @@
+{
+	"global": {
+		"type": "string",
+		"value": "https://mentoring-key-vault-sd.vault.azure.net/secrets/url/be0b28bf5b704645bdb2b03c33f5aa83"
+	}
+}

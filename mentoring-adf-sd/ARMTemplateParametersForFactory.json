@@ -1,0 +1,54 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "mentoring-adf-sd"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorage3_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorageArchive_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorageIntDataset_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorageOnlineDataLake_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase2_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabaseDataMart_connectionString": {
+			"value": ""
+		},
+		"AzureSqlDatabase_admin_connectionString": {
+			"value": ""
+		},
+		"SqlServerLOCAL_connectionString": {
+			"value": ""
+		},
+		"AzureBlobStorage4_properties_typeProperties_sasUri_secretName": {
+			"value": "sas"
+		},
+		"AzureBlobStorage5testonlinetest_sasUri": {
+			"value": ""
+		},
+		"AzureBlobStorageOnline_properties_typeProperties_sasUri_secretName": {
+			"value": "SourceOnline"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://azurementoringdatalakesd.dfs.core.windows.net/"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://etl-key-value.vault.azure.net/"
+		},
+		"Azure_key_vault_ds_properties_typeProperties_baseUrl": {
+			"value": "https://mentoring-key-vault-sd.vault.azure.net/"
+		}
+	}
+}
