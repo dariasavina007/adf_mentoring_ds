@@ -1,0 +1,45 @@
+{
+	"name": "pipeline web",
+	"properties": {
+		"activities": [
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "https://prod-07.francecentral.logic.azure.com:443/workflows/0b16a5500e8544b8a6fad2143868da74/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=KpNVu3OeoXst5JoJH7BK6LIb1c9B5w4e0rm9ZpOC7t0",
+						"type": "Expression"
+					},
+					"method": "POST",
+					"body": {
+						"value": "{\n    \"message\" : \"This is a custom dynamic message from your pipeline with run ID @{pipeline().RunId}.\",\n    \"dataFactoryName\" : \"@{pipeline().DataFactory}\", \n    \"pipelineName\" : \"@{pipeline().Pipeline}\", \n    \"receiver\" : \"@{pipeline().parameters.receiver}\"\n   }",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"receiver": {
+				"type": "string",
+				"defaultValue": "daria_savina@epam.com"
+			}
+		},
+		"variables": {
+			"value": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-08-02T09:22:18Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

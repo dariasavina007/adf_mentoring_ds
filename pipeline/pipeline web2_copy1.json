@@ -1,0 +1,122 @@
+{
+	"name": "pipeline web2_copy1",
+	"properties": {
+		"activities": [
+			{
+				"name": "get",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat(pipeline().globalParameters.global,'?api-version=7.0')",
+						"type": "Expression"
+					},
+					"method": "GET",
+					"authentication": {
+						"type": "MSI",
+						"resource": {
+							"value": "https://vault.azure.net",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "post_succeed",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "get",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@activity('get').output[0].value",
+						"type": "Expression"
+					},
+					"method": "POST",
+					"body": {
+						"value": "{\n    \"pipelineName\" : \" @{pipeline().Pipeline}.\",\n    \"dataFactoryName\" : \"@{pipeline().DataFactory}\", \n    \"pipelineRunId\" : \"@{pipeline().RunId}\", \n    \"status\" : \"@{variables('status_suc')}\",\n    \"errors\" : \"@{variables('error_suc')}\",\n    \"receiver\" : \"@{pipeline().parameters.receiver}\"\n   }",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "post_failed",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "get",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@activity('get').output[0].value",
+						"type": "Expression"
+					},
+					"method": "POST",
+					"body": {
+						"value": "{\n    \"pipelineName\" : \" @{pipeline().Pipeline}.\",\n    \"dataFactoryName\" : \"@{pipeline().DataFactory}\", \n    \"pipelineRunId\" : \"@{pipeline().RunId}\", \n    \"status\" : \"@{variables('status_fail')}\",\n    \"errors\" : \"@{activity('get').output.error.code}\",\n    \"receiver\" : \"@{pipeline().parameters.receiver}\"\n   }",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"receiver": {
+				"type": "string",
+				"defaultValue": "daria_savina@epam.com"
+			}
+		},
+		"variables": {
+			"error_suc": {
+				"type": "String",
+				"defaultValue": "OK"
+			},
+			"error fail": {
+				"type": "String"
+			},
+			"status_suc": {
+				"type": "String",
+				"defaultValue": "Succeeded"
+			},
+			"status_fail": {
+				"type": "String",
+				"defaultValue": "Failed"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-08-02T09:22:18Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

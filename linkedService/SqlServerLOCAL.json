@@ -1,0 +1,16 @@
+{
+	"name": "SqlServerLOCAL",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=False;data source=EPUAKYIW129B\\MSSQLSERVER01;initial catalog=CinemaTickets;user id=sa",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJhZWM3YWNkZC04NDc1LTRjNzktODhiYy03YmVkNzEzMzk1MjkiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "integrationRuntime-ds",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

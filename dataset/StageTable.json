@@ -1,0 +1,26 @@
+{
+	"name": "StageTable",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase_admin",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "PipelineName",
+				"type": "text"
+			},
+			{
+				"name": "LastModifiedDate",
+				"type": "text"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "StageTable"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,110 @@
+{
+	"name": "dataflowDimOnlineService",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTabletOnlineService",
+						"type": "DatasetReference"
+					},
+					"name": "sourcetOnlineService"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTableDimOnlineService",
+						"type": "DatasetReference"
+					},
+					"name": "sourceSinkForCheck"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTableDimOnlineService",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "selectOnlineService"
+				},
+				{
+					"name": "AddColumns"
+				},
+				{
+					"name": "selectFinal"
+				},
+				{
+					"name": "alterRow"
+				},
+				{
+					"name": "exists"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ServiceCode as string,",
+				"          ServiceName as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'SELECT distinct ServiceCode,ServiceName  FROM [dbo].[tOnlineService]',",
+				"     format: 'query') ~> sourcetOnlineService",
+				"source(output(",
+				"          ServiceKey as integer,",
+				"          ServiceCode as string,",
+				"          ServiceName as string,",
+				"          CreatedDate as timestamp,",
+				"          ModifiedDate as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> sourceSinkForCheck",
+				"sourcetOnlineService select(mapColumn(",
+				"          ServiceCode,",
+				"          ServiceName",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectOnlineService",
+				"selectOnlineService derive(CreatedDate = currentTimestamp(),",
+				"          ModifiedDate = currentTimestamp()) ~> AddColumns",
+				"AddColumns select(mapColumn(",
+				"          ServiceCode,",
+				"          ServiceName,",
+				"          CreatedDate,",
+				"          ModifiedDate",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectFinal",
+				"exists alterRow(insertIf(true()),",
+				"     updateIf(true())) ~> alterRow",
+				"selectFinal, sourceSinkForCheck exists(selectFinal@ServiceCode == sourceSinkForCheck@ServiceCode,",
+				"     negate:true,",
+				"     broadcast: 'auto')~> exists",
+				"alterRow sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          ServiceKey as integer,",
+				"          ServiceCode as string,",
+				"          ServiceName as string,",
+				"          CreatedDate as timestamp,",
+				"          ModifiedDate as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}

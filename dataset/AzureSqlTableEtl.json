@@ -1,0 +1,62 @@
+{
+	"name": "AzureSqlTableEtl",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase_admin",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "ContainerName",
+				"type": "varchar"
+			},
+			{
+				"name": "FolderName",
+				"type": "varchar"
+			},
+			{
+				"name": "FileName",
+				"type": "varchar"
+			},
+			{
+				"name": "ColumnDelimiter",
+				"type": "varchar"
+			},
+			{
+				"name": "Encoding",
+				"type": "varchar"
+			},
+			{
+				"name": "EscapeCharacter",
+				"type": "varchar"
+			},
+			{
+				"name": "QuoteCharacter",
+				"type": "varchar"
+			},
+			{
+				"name": "SchemaName",
+				"type": "varchar"
+			},
+			{
+				"name": "TableName",
+				"type": "varchar"
+			},
+			{
+				"name": "SourceColumn",
+				"type": "varchar"
+			},
+			{
+				"name": "TargetColumn",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "etl",
+			"table": "tControlMetadata"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

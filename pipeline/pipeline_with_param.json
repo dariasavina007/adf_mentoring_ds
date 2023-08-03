@@ -1,0 +1,227 @@
+{
+	"name": "pipeline_with_param",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@array(activity('Lookup1').output.value)\n",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy data1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"additionalColumns": [
+										{
+											"name": "pipelineId",
+											"value": {
+												"value": "@pipeline().Pipeline",
+												"type": "Expression"
+											}
+										},
+										{
+											"name": "source_filename",
+											"value": {
+												"value": "@item().filename",
+												"type": "Expression"
+											}
+										}
+									],
+									"storeSettings": {
+										"type": "AzureBlobStorageReadSettings",
+										"recursive": true,
+										"wildcardFolderPath": {
+											"value": "@item().foldername",
+											"type": "Expression"
+										},
+										"wildcardFileName": {
+											"value": "@item().filename",
+											"type": "Expression"
+										},
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": {
+										"value": "TRUNCATE TABLE @{item().schemaname}.@{item().tablename}",
+										"type": "Expression"
+									},
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false,
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"value": "@json(item().mapping)",
+									"type": "Expression"
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "credits",
+									"type": "DatasetReference",
+									"parameters": {
+										"containername": {
+											"value": "@item().containername",
+											"type": "Expression"
+										},
+										"foldername": {
+											"value": "@item().foldername",
+											"type": "Expression"
+										},
+										"filename": {
+											"value": "@item().filename",
+											"type": "Expression"
+										},
+										"columndelimiter": {
+											"value": "@item().columndelimiter",
+											"type": "Expression"
+										},
+										"encoding": {
+											"value": "@item().encoding",
+											"type": "Expression"
+										},
+										"quotecharacter": {
+											"value": "@item().quotecharacter",
+											"type": "Expression"
+										},
+										"escapecharacter": {
+											"value": "@item().escapecharacter",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "AzureSqlTablecredits",
+									"type": "DatasetReference",
+									"parameters": {
+										"tablename": {
+											"value": "@item().tablename",
+											"type": "Expression"
+										},
+										"schemaname": {
+											"value": "@item().schemaname",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "Lookup1",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Set variable start time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "SELECT Container-Name as ContainerName,\n\tFolderName as foldername,\n\tFileName as filename,\n\tColumnDelimiter as columndelimiter,\n\tEncoding as encoding,\n\tEscapeCharacter as escapecharacter,\n\tQuoteCharacter as quotecharacter,\n\tSchemaName as schemaname,\n\tTableName as tablename,\n\tMapping as mapping\n FROM [etl].[tControlMetadata]\n",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSqlTableEtl",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Set variable start time",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "start_time",
+					"value": {
+						"value": "@formatDateTime(utcnow())",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"filename": {
+				"type": "String"
+			},
+			"foldername": {
+				"type": "String"
+			},
+			"containername": {
+				"type": "String"
+			},
+			"schemaname": {
+				"type": "String"
+			},
+			"tablename": {
+				"type": "String"
+			},
+			"mapping": {
+				"type": "String"
+			},
+			"start_time": {
+				"type": "String"
+			},
+			"end_time": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-07-27T15:06:30Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

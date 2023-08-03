@@ -1,0 +1,72 @@
+{
+	"name": "pipeline web2",
+	"properties": {
+		"activities": [
+			{
+				"name": "Web2",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "https://mentoring-key-vault-sd.vault.azure.net/secrets/url/be0b28bf5b704645bdb2b03c33f5aa83",
+						"type": "Expression"
+					},
+					"method": "GET",
+					"authentication": {
+						"type": "MSI",
+						"resource": {
+							"value": "https://vault.azure.net",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Web2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "value",
+					"value": {
+						"value": "@activity('Web2').output.value",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"receiver": {
+				"type": "string",
+				"defaultValue": "daria_savina@gmail.com"
+			}
+		},
+		"variables": {
+			"value": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-07-31T14:35:47Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

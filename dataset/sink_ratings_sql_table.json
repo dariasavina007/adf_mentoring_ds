@@ -1,0 +1,42 @@
+{
+	"name": "sink_ratings_sql_table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase_admin",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "userId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "movieId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "rating",
+				"type": "nvarchar"
+			},
+			{
+				"name": "timestamp",
+				"type": "nvarchar"
+			},
+			{
+				"name": "pipelineId",
+				"type": "varchar"
+			},
+			{
+				"name": "source_filename",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "stg",
+			"table": "ratings"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

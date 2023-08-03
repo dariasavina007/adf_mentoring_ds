@@ -1,0 +1,908 @@
+{
+	"name": "Load_CSV_files",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data credits",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"additionalColumns": [
+							{
+								"name": "source_filename",
+								"value": "$$FILEPATH"
+							},
+							{
+								"name": "pipelineId",
+								"value": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
+								}
+							}
+						],
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "cast",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "cast",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "crew",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "crew",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "id",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "id",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "pipelineId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "pipelineId",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "source_filename",
+									"type": "String"
+								},
+								"sink": {
+									"name": "source_filename",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "source_credits",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "sink_credits_sql_table",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy data movies_metadata",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Copy data credits",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"additionalColumns": [
+							{
+								"name": "source_filename",
+								"value": "$$FILEPATH"
+							},
+							{
+								"name": "pipelineId",
+								"value": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
+								}
+							}
+						],
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "adult",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "adult",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "belongs_to_collection",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "belongs_to_collection",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "budget",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "budget",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "genres",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "genres",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "homepage",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "homepage",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "id",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "id",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "imdb_id",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "imdb_id",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "original_language",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "original_language",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "original_title",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "original_title",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "overview",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "overview",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "popularity",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "popularity",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "poster_path",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "poster_path",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "production_companies",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "production_companies",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "production_countries",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "production_countries",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "release_date",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "release_date",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "revenue",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "revenue",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "runtime",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "runtime",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "spoken_languages",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "spoken_languages",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "status",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "status",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "tagline",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "tagline",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "title",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "title",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "video",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "video",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "vote_average",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "vote_average",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "vote_count",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "vote_count",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "pipelineId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "pipelineId",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "source_filename",
+									"type": "String"
+								},
+								"sink": {
+									"name": "source_filename",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "source_movies_metadata",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "sink_movies_metadata_sql_table",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy data ratings",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Copy data movies_metadata",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"additionalColumns": [
+							{
+								"name": "source_filename",
+								"value": "$$FILEPATH"
+							},
+							{
+								"name": "pipelineId",
+								"value": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
+								}
+							}
+						],
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"wildcardFileName": "ratings*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "userId",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "userId",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "movieId",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "movieId",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "rating",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "rating",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "timestamp",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "timestamp",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
+									"name": "pipelineId",
+									"type": "String"
+								},
+								"sink": {
+									"name": "pipelineId",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "source_filename",
+									"type": "String"
+								},
+								"sink": {
+									"name": "source_filename",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "source_rating",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "sink_ratings_sql_table",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "spPopulateCast",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Copy data ratings",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[spPopulateCast]"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_admin",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "spPopulateCompany",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "spPopulateCast",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[spPopulateCompany]"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_admin",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "spPopulateMoviesGenreMap",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "spPopulateMoviesCompanyMap",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[spPopulateMoviesGenreMap]"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_admin",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "spPopulateMoviesCompanyMap",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "spPopulateMoviesCastMap",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[spPopulateMoviesCompanyMap]"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_admin",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "spPopulateMoviesCastMap",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "spPopulateMovies",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[spPopulateMoviesCastMap]"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_admin",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "spPopulatetRatings",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "spPopulateMovieStatus",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[spPopulatetRatings]"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_admin",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "spPopulateMovieStatus",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "spPopulateMoviesGenreMap",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[spPopulateMovieStatus]"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_admin",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "spPopulateMovies",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "spPopulateGenre",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[spPopulateMovies]"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_admin",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "spPopulateGenre",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "spPopulateCompany",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[spPopulateGenre]"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase_admin",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2023-04-20T12:42:08Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

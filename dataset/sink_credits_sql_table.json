@@ -1,0 +1,17 @@
+{
+	"name": "sink_credits_sql_table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase_admin",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "stg",
+			"table": "credits"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

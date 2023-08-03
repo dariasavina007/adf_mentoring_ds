@@ -1,0 +1,24 @@
+{
+	"name": "Daily_trigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Stopped",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "Load data to Azure SQL database incrementally",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2023-05-29T20:00:00",
+				"timeZone": "E. Europe Standard Time"
+			}
+		}
+	}
+}

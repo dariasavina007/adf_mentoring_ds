@@ -1,0 +1,70 @@
+{
+	"name": "credits",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorageOnlineDataLake",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"containername": {
+				"type": "string"
+			},
+			"foldername": {
+				"type": "string"
+			},
+			"filename": {
+				"type": "string"
+			},
+			"columndelimiter": {
+				"type": "string"
+			},
+			"encoding": {
+				"type": "string"
+			},
+			"quotecharacter": {
+				"type": "string"
+			},
+			"escapecharacter": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().filename",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().foldername",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().containername",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": {
+				"value": "@dataset().columndelimiter",
+				"type": "Expression"
+			},
+			"encodingName": {
+				"value": "@dataset().encoding",
+				"type": "Expression"
+			},
+			"escapeChar": {
+				"value": "@dataset().escapecharacter",
+				"type": "Expression"
+			},
+			"firstRowAsHeader": true,
+			"quoteChar": {
+				"value": "@dataset().quotecharacter",
+				"type": "Expression"
+			}
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
